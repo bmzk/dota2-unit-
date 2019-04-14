@@ -4,7 +4,7 @@ import 公共变量
 
 
 def readData():
-    '''从json文件中读取数据'''
+    '''从json文件中读取数据,返回值为字典,键值为 单位名,值为 属性组成的字典'''
     print('readData start')
     f=open(公共变量.jsonfile)
     unit_dict=json.load(f)['DOTAHeroes']

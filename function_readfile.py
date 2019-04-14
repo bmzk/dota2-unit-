@@ -38,5 +38,5 @@ def rf(r_file='npc_heroes2.txt'):
 
     file_w.write(returnstring)
     file_w.close()
-
+    print('生成json文件成功')
     return returnstring

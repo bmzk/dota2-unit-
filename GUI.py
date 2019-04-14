@@ -1,35 +1,39 @@
 '''用于创建一个人窗口程序,必须使用 GUI函数.py'''
 import wx
 import GUI函数
+import 公共变量
 #wx.Choice(parent, id, pos, size, n, choices[], style) 
 class creatCtrl(object):
     '''创建创造一组控件'''
     def event(self,event): 
         '''绑定事件,用于在标签中显示文字'''
-        mystr1=self.valueText1.GetString()
+        mystr1=self.valueText1.GetLabelText()
         self.label1.SetLabel(mystr1) 
-        mystr2=self.valueText2.GetString()
-        self.label2.SetLabel(mystr2) 
-    def __init__(self,labelstr_list,linenumber=0,app=wx.App(),grid=wx.GridBagSizer(0,0),panel=wx.Panel()):
+        # mystr2=self.valueText2.GetString()
+        # self.label2.SetLabel(mystr2) 
+    def __init__(self,labelstr,pos_x,pos_y=0,
+            app=wx.App(),grid=wx.GridBagSizer(0,0),panel=wx.Panel(),ctrl_width=100):
         '''构造函数,创造一组控件,包括2个标签和2个文本框 \n
         namestr:标签中的文字
         linenumber : 行号
         app=wx.App(),grid=wx.GridBagSizer(0,0),panel=wx.Panel()'''
         #创建一个标签,坐标(n,0)
-        self.label1=wx.StaticText(panel,label=labelstr_list[0],style = wx.ALIGN_CENTRE)
-        grid.Add(self.label1,pos=(linenumber,0),flag=wx.EXPAND|wx.ALIGN_LEFT|wx.ALL) 
+        self.label1=wx.StaticText(panel,label=labelstr,size=(100,-1),style = wx.ALIGN_RIGHT)
+        self.label1.Wrap(200) 
+        #self.label1.GetLabelText
+        grid.Add(self.label1,pos=(pos_x,pos_y),flag=wx.EXPAND|wx.ALIGN_LEFT|wx.ALL) 
         #创建一个文本框,坐标(n,1)
-        self.valueText1=wx.TextCtrl(panel)
-        grid.Add(self.valueText1,pos=(linenumber,1)) 
-        #创建第二个标签,坐标(n,2)
-        self.label2=wx.StaticText(panel,label=labelstr_list[1],style = wx.ALIGN_CENTRE)
-        grid.Add(self.label2,pos=(linenumber,2),flag=wx.EXPAND|wx.ALIGN_LEFT|wx.ALL) 
-        #创建第二个文本框,坐标(n,3)
-        self.valueText2=wx.TextCtrl(panel)
-        grid.Add(self.valueText2,pos=(linenumber,3)) 
+        self.valueText1=wx.TextCtrl(panel,size=(ctrl_width,-1))
+        grid.Add(self.valueText1,pos=(pos_x,pos_y+1)) 
+        # #创建第二个标签,坐标(n,2)
+        # self.label2=wx.StaticText(panel,label=labelstr_list[1],style = wx.ALIGN_CENTRE)
+        # grid.Add(self.label2,pos=(linenumber,2),flag=wx.EXPAND|wx.ALIGN_LEFT|wx.ALL) 
+        # #创建第二个文本框,坐标(n,3)
+        # self.valueText2=wx.TextCtrl(panel)
+        # grid.Add(self.valueText2,pos=(linenumber,3)) 
         #
         #事件绑定
-        self.valueText1.Bind(wx.EVT_TEXT, self.event)
+        #self.valueText1.Bind(wx.EVT_TEXT, self.event)
 
 class creatLabel(object):
     def __init__(self,namestr,pos,app=wx.App(),grid=wx.GridBagSizer(0,0),panel=wx.Panel()):
@@ -50,22 +54,15 @@ class Mywin(wx.Frame):
         pos : 控件位置,第几行第几列,从0开始\n
         span : 控件跨越的行数和列数\n
         '''
-        super(Mywin, self).__init__(None, title ='Dota2 游戏数据修改',size=(500,650)) 
+        super(Mywin, self).__init__(None, title ='Dota2 游戏数据修改',size=(800,650)) 
         ################################################################
         #对象的属性#
+        self.error_str1 = '无此键值'     #读取属性时出现不存在的属性显示键值
+        self.error_str2 = '错误键值'
         self.unit_dict={}
-        self.unit_list=[]
-        self.attribute_list=[
-            #["修改对象","单位类型"],
-            ['物理护甲','魔法护甲'],
-            ['最小攻击力','最大攻击力'],
-            ['攻击类型','攻击速度'],
-            ['攻击距离','弹道速度'],
-            ['移动','移动速度'],
-            ['生命值','生命恢复速度'],
-            ['魔法值','魔法恢复速度'],
-            ['白天视野','夜间视野']
-        ]
+        self.unit_name_list=[]
+        self.ctrl_list=[]
+        self.skill_ctrl_list=[]
         ################################################################
         #分离器对象添加到顶层帧。
         splitter = wx.SplitterWindow(self, -1) #一个布局管理器，拥有两个子窗口,子窗口大小可以通过拖动它们之间的界限来动态变化。
@@ -92,11 +89,11 @@ class Mywin(wx.Frame):
         self.grid_left.Add(self.label_,0) 
         self.unitlabel=wx.StaticText(self.panel_right,label='选择单位')
         self.grid_left.Add(self.unitlabel,0) 
-        self.unit_list_box = wx.ListBox(self.panel_right, choices = self.unit_list, style = wx.LB_SINGLE) 
-        self.grid_left.Add(self.unit_list_box,90) 
+        self.unit_name_list_box = wx.ListBox(self.panel_right, choices = self.unit_name_list, style = wx.LB_SINGLE) 
+        self.grid_left.Add(self.unit_name_list_box,90) 
         #绑定数据
         self.读取数据.Bind(wx.EVT_BUTTON, self.check_readData)
-        self.Bind(wx.EVT_LISTBOX, self.select_unit, self.unit_list_box ) #绑定,点击左侧选择项时发生事件
+        self.Bind(wx.EVT_LISTBOX, self.select_unit, self.unit_name_list_box ) #绑定,点击左侧选择项时发生事件
         #右侧窗口###################################################
         grid_right = wx.GridBagSizer(0,0) #右侧布局控件,其它控件将放在其内,用于单位显示属性
         panel_right = wx.Panel(splitter, -1) 
@@ -112,45 +109,64 @@ class Mywin(wx.Frame):
         #self.Centre() 
         self.Show()
     def select_unit(self, event): 
-        select_unit=event.GetEventObject().GetStringSelection()
+        def read_att(ctrl_list,attribute_dict):
+            ''''''
+            select_unit_str=event.GetEventObject().GetStringSelection()
+            selete_unit=self.unit_dict[select_unit_str]
+            for i in ctrl_list:
+                #属性中文名
+                str1 = i.label1.GetLabelText()
+                #属性英文名
+                try:
+                    str2 = attribute_dict[str1]
+                except KeyError:
+                    print('错误,跳过  str1 =',str1)
+                    str3=self.error_str1
+                    next
+                except:
+                    print('错误')
+                #属性值
+                #str3 = selete_unit[str2]
+                try:
+                    str3 = selete_unit[str2]
+                except KeyError:
+                    str3 = self.error_str1
+                except:
+                    str3 = self.error_str2
+            #属性值赋给文本框
+                ctrl_list[ctrl_list.index(i)].valueText1.SetLabel(str3)
         self.Title=event.GetEventObject().GetStringSelection()
-        att=''
-        for i in self.attribute_list:
-            for j in i:
-                print(self.unit_dict[select_unit][j])
-
-        pass
+        read_att(self.ctrl_list,公共变量.attribute_name_dict)  
+        read_att(self.skill_ctrl_list,公共变量.skill_dict)
     def check_readData(self,Event):
         self.unit_dict = GUI函数.readData()
-        self.unit_list = list(self.unit_dict.keys())
-        print(self.unit_list)
-        self.unit_list_box.Items=self.unit_list
-
-    def OnChoice(self,event): 
-      self.label.SetLabel("正在修改 "+ self.choice.GetString
-         (self.choice.GetSelection())) 
-    def sizeChange(self,event):
-       print(self.GetSizes())
-       self.label.SetLabel(self.GetSizes()) 
+        self.unit_name_list = list(self.unit_dict.keys())
+        print(self.unit_name_list)
+        self.unit_name_list_box.Items=self.unit_name_list
     def add_ctrl(self,grid,panel):
         '''在右侧窗口添加控件以显示属性'''
-        ctrl_list=[]
-        for i in self.attribute_list:
-            ctrl_list.append(creatCtrl(i,self.attribute_list.index(i),self,grid,panel))
+        l=公共变量.attribute_name_dict
+        #控件所在行号
+        n=1
+        for i in l:
+            self.ctrl_list.append(creatCtrl(i,n,0,self,grid,panel))
+            n=n+1
         #最后一行###################################################
         self.保存 = wx.Button(panel, label = "保存") 
         self.重置 = wx.Button(panel, label = "重置") 
-        grid.Add(self.保存, pos = (len(self.attribute_list), 3),flag = wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, border = 3) 
-        grid.Add(self.重置, pos = (len(self.attribute_list), 2),flag = wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, border = 3) 
+        grid.Add(self.保存, pos = (n+1, 1),flag = wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, border = 3) 
+        grid.Add(self.重置, pos = (n+1, 0),flag = wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, border = 3) 
         #GUI函数在GUI函数.py文件中
         #self.choice.Bind(wx.EVT_CHOICE, self.OnChoice)
         self.保存.Bind(wx.EVT_BUTTON, GUI函数.saveData)
         self.重置.Bind(wx.EVT_BUTTON, GUI函数.resetData)
-        
+        #技能列#############################################
+        m=1
+        for i in 公共变量.skill_dict:
+            self.skill_ctrl_list.append(creatCtrl(i,m,2,self,grid,panel,ctrl_width=200))
+            m=m+1
 
 def 启动窗口():
     app = wx.App() 
     Mywin() 
     app.MainLoop()
-
-启动窗口()
