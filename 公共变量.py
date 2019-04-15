@@ -1,5 +1,6 @@
 '''定义公共变量'''
 file = 'npc_heroes.txt'
+file = 'npc.txt'
 jsonfile = 'npc_heroes.json'
 
 attribute_name_dict = {

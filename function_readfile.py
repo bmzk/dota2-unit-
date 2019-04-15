@@ -9,7 +9,7 @@ def rf(r_file='npc_heroes2.txt'):
     newfile=r_file[:-4]+t+'备份.txt'
     os.system('copy '+r_file+' ' + newfile)
     #产生json文件
-    f=open(r_file)
+    f=open(r_file,'r',encoding='utf-8')
     lines = f.readlines()
     print('正在读取json文件,文件为',f)
     file_w=open(r_file[:-3]+'json','w+',encoding='utf-8')
