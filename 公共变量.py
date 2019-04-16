@@ -8,7 +8,6 @@ attribute_name_dict = {
     '魔法护甲  ': 'MagicalResistance',
     '最小攻击力  ': 'AttackDamageMin',
     '最大攻击力  ': 'AttackDamageMax',
-    # '攻击类型  ': 'AttackDamageType',
     '攻击速度  ': 'AttackRate',
     '主动攻击距离  ': 'AttackAcquisitionRange',
     '攻击距离  ': 'AttackRange',
@@ -17,7 +16,6 @@ attribute_name_dict = {
     '生命恢复速度  ': 'StatusHealthRegen',
     '初始魔法值  ': 'StatusMana',
     '魔法恢复速度  ': 'StatusManaRegen',
-    '英雄主属性  ': "AttributePrimary",
     '初始力量  ': "AttributeBaseStrength",
     '力量成长  ': "AttributeStrengthGain",
     '初始智力  ': "AttributeBaseIntelligence",
@@ -27,7 +25,11 @@ attribute_name_dict = {
     '白天视野  ': 'VisionDaytimeRange',
     '夜间视野  ': 'VisionNighttimeRange'
 }
+
+
 skill_dict = {
+    '攻击类型  ': 'AttackDamageType',
+    '英雄主属性  ': "AttributePrimary",
     '技能1  ': 'Ability1',
     '技能2  ': 'Ability2',
     '技能3  ': 'Ability3',
@@ -35,8 +37,8 @@ skill_dict = {
     '技能5  ': 'Ability5',
     '技能6  ': 'Ability6',
     '技能7  ': 'Ability7',
-    '技能8  ': 'Ability8',
-    '技能9  ': 'Ability9',
+    # '技能8  ': 'Ability8',
+    # '技能9  ': 'Ability9',
     '技能10  ': 'Ability10',
     '技能11  ': 'Ability11',
     '技能12  ': 'Ability12',
