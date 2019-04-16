@@ -48,3 +48,14 @@ skill_dict = {
     '技能16  ': 'Ability16',
     '技能17  ': 'Ability17'
 }
+
+ChoiceItems_list_heroskill=[
+'skill-1',
+'skill-2'
+]
+ChoiceItems_list_spacialskill=[
+'skill-11',
+'skill-22'
+]
+import wx
+wx.Choice

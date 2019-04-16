@@ -20,16 +20,16 @@ class LineCtrls(object):
         self.StaticText = wx.StaticText(panel, size=(width, -1),style=wx.ALIGN_RIGHT)
         self.StaticText.SetBackgroundColour('white') #背景色
         self.TextCtrl=wx.TextCtrl(panel,style=wx.TE_CENTER)
-        self.Choic = wx.Choice(panel)
+        self.Choice = wx.Choice(panel)
 class CtrlList():
     '''创造一组包含n个LineCtrls对象的列表'''
-    def __init__(self,panel,grid,StartPos=(0,0),n=5,IsTextCtrl=True ,width=100):
+    def __init__(self,panel,grid,StartPos=(0,0),n=5,IsHasChoice=True ,width=100):
         '''n: CtrlList包含的控件个数
         IsTextCtrl : 要TextCtrl还是Choic,默认TextCtrl'''
         self.clist=[]
         for i in range(n):
             self.clist.append(LineCtrls(panel,width))
-        if IsTextCtrl:
+        if IsHasChoice:
             for i in self.clist:
                 grid.Add(i.StaticText ,pos=(StartPos[0]+self.clist.index(i),StartPos[1]),flag= wx.ALIGN_CENTER | wx.ALL)
                 print('try:',StartPos[0]+self.clist.index(i),StartPos[1])
@@ -37,13 +37,10 @@ class CtrlList():
         else:
             for i in self.clist:
                 print('False try:',StartPos[0]+self.clist.index(i),StartPos[1])
-                try:
-                    grid.Add(i.StaticText ,pos=(StartPos[0]+self.clist.index(i),StartPos[1]),flag= wx.ALIGN_CENTER | wx.ALL)
-                    grid.Add(i.Choic ,pos=(StartPos[0]+self.clist.index(i),StartPos[1]+1),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
-                except:
-                    pass
-
-unitNameList = ['unit1', 'unit2']
+                x=StartPos[0]+self.clist.index(i)
+                grid.Add(i.StaticText ,pos=(x,StartPos[1]  ),flag= wx.ALIGN_CENTER | wx.ALL)
+                grid.Add(i.TextCtrl   ,pos=(x,StartPos[1]+1),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+                grid.Add(i.Choice      ,pos=(x,StartPos[1]+2),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
 
 class Mywin(wx.Frame):
     '''创建一个窗口类.\n
@@ -122,8 +119,7 @@ class Mywin(wx.Frame):
         self.Title = self.SelectUnit
         def refresh_att(ctrl_list, attribute_dict):
             ''''''
-            select_unit_str = event.GetEventObject().GetStringSelection()
-            selete_unit = self.unit_dict[select_unit_str]
+            selete_unit = self.unit_dict[self.SelectUnit]#选择的英雄的属性字典
             for i in ctrl_list:
                 # 属性中文名
                 str1 = i.StaticText.GetLabelText()
@@ -138,7 +134,6 @@ class Mywin(wx.Frame):
                 except:
                     print('错误')
                 # 属性值
-                #str3 = selete_unit[str2]
                 try:
                     str3 = selete_unit[str2]
                 except KeyError:
@@ -149,9 +144,13 @@ class Mywin(wx.Frame):
                 ctrl_list[ctrl_list.index(i)].TextCtrl.SetLabel(str3)
         ##############################################
         refresh_att(self.CtrlList1.clist, 公共变量.attribute_name_dict)
-        #read_att(self.CtrlList2, 公共变量.skill_dict) 
+        refresh_att(self.CtrlList2.clist, 公共变量.skill_dict)
+        #secondChoice.SetItems(newItems)
+        #Choice(parent, id=ID_ANY,  choices=[])
+
 
     def check_readData(self, Event):
+        '''点击 读取数据按钮 时发生的事件'''
         self.unit_dict = GUI函数.readData()
         self.unit_name_list = list(self.unit_dict.keys())
         print(self.unit_name_list)
@@ -165,11 +164,17 @@ class Mywin(wx.Frame):
         for i in l:
             self.CtrlList1.clist[n-1].StaticText.SetLabel(i)
             n = n+1
-        self.CtrlList2=CtrlList(panel,grid,(1,2),n=len(公共变量.skill_dict),IsTextCtrl=False)
+        self.CtrlList2=CtrlList(panel,grid,(1,2),n=len(公共变量.skill_dict),IsHasChoice=False)
         n = 1
         for i in list(公共变量.skill_dict.keys()):
             self.CtrlList2.clist[n-1].StaticText.SetLabel(i)
             n = n+1
+        #############################################################
+        for i in range(0,5):
+            self.CtrlList2.clist[i].Choice.SetItems(公共变量.ChoiceItems_list_heroskill)
+        for i in range(5,len(公共变量.skill_dict)):
+            self.CtrlList2.clist[i].Choice.SetItems(公共变量.ChoiceItems_list_spacialskill)
+            #self.CtrlList2.clist[i].Choice.Select
 
 def 启动窗口():
     app = wx.App()
