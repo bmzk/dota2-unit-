@@ -72,7 +72,7 @@ class ctrls(object):
 
 
 
-class Mywin(wx.Frame):
+class  Mywin(wx.Frame):
     '''创建一个窗口类.\n
     '''
     def __init__(self):
@@ -92,8 +92,6 @@ class Mywin(wx.Frame):
         self.str_error = '错误键值' 
         self.unit_dict = {}
         self.unit_name_list = []
-        self.ctrl_list = []
-        self.skill_ctrl_list = []
         self.SelectUnit=''
         ################################################################
         # 分离器对象添加到顶层帧。
@@ -143,7 +141,7 @@ class Mywin(wx.Frame):
         self.panel_right.SetSizerAndFit(self.grid_right)
         self.Center()
         self.Show()
-
+        print('get',type(self.grid_right.Children[0]))
     def select_unit(self, event):
         self.SelectUnit=event.GetEventObject().GetStringSelection()
         self.Title = self.SelectUnit
