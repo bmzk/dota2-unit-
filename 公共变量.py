@@ -1,3 +1,4 @@
+import wx
 '''定义公共变量'''
 file = 'npc_heroes.txt'
 file = 'npc.txt'
@@ -28,34 +29,47 @@ attribute_name_dict = {
 
 
 skill_dict = {
-    '攻击类型  ': 'AttackDamageType',
-    '英雄主属性  ': "AttributePrimary",
     '技能1  ': 'Ability1',
     '技能2  ': 'Ability2',
     '技能3  ': 'Ability3',
     '技能4  ': 'Ability4',
     '技能5  ': 'Ability5',
     '技能6  ': 'Ability6',
-    '技能7  ': 'Ability7',
-    # '技能8  ': 'Ability8',
-    # '技能9  ': 'Ability9',
-    '技能10  ': 'Ability10',
-    '技能11  ': 'Ability11',
-    '技能12  ': 'Ability12',
-    '技能13  ': 'Ability13',
-    '技能14  ': 'Ability14',
-    '技能15  ': 'Ability15',
-    '技能16  ': 'Ability16',
-    '技能17  ': 'Ability17'
+}
+special_bonus_dict = {
+    '10级 右侧  ': 'Ability10',
+    '10级 左侧  ': 'Ability11',
+    '15级 右侧  ': 'Ability12',
+    '15级 左侧  ': 'Ability13',
+    '20级 右侧  ': 'Ability14',
+    '20级 左侧  ': 'Ability15',
+    '25级 右侧  ': 'Ability16',
+    '25级 左侧  ': 'Ability17'
 }
 
-ChoiceItems_list_heroskill=[
-'skill-1',
-'skill-2'
+ChoiceItems_list_AttributePrimary = [
+    'Null',
+    'DOTA_ATTRIBUTE_STRENGTH',
+    'DOTA_ATTRIBUTE_AGILITY',
+    'DOTA_ATTRIBUTE_INTELLECT',
 ]
-ChoiceItems_list_spacialskill=[
-'skill-11',
-'skill-22'
+
+ChoiceItems_list_AttackCapabilities = [
+    'Null',
+    '近程\n DOTA_UNIT_CAP_MELEE_ATTACK',
+    '远程\n DOTA_UNIT_CAP_RANGED_ATTACK'
 ]
-import wx
-wx.Choice
+
+
+ChoiceItems_list_skill = [
+    'Null',
+    'pudge',
+    '决斗'
+]
+
+ChoiceItems_list_special_bonus = [
+    'Null',
+    'special_bonus_movement_speed_30',
+    'special_bonus_movement_speed_50'
+
+]
