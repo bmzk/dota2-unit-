@@ -9,38 +9,68 @@ import wx
 
 import GUI函数
 import 公共变量
-
+#全局变量######################
+currentline1=0      #向grid添加控件时当前所在的行号,第一列
+currentline2=0      #向grid添加控件时当前所在的行号,第一列
+########################
 class LineCtrls(object):
     '''创建创造一个控件对象,包括StaticText \TextCtrl \wx.Choice控件'''
-    def __init__(self, panel,  width):
+    def __init__(self, panel, mylabel='',myitems=[] ,isspan=False,width=150):
         '''构造函数,创造一组控件,包括2个标签和2个文本框 \n
-        StaticText_str:标签中的文字列表
+        mylabel : 标签中的文字列表 \n
+        myitems : choices的选择项列表\n
         panel=wx.Panel()'''
         # 创建一个标签,坐标(n,0)
-        self.StaticText = wx.StaticText(panel, size=(width, -1),style=wx.ALIGN_RIGHT)
+        self.StaticText = wx.StaticText(panel, label=mylabel,style=wx.ALIGN_RIGHT)
         self.StaticText.SetBackgroundColour('white') #背景色
-        self.TextCtrl=wx.TextCtrl(panel,style=wx.TE_CENTER)
-        self.Choice = wx.Choice(panel)
-class CtrlList():
-    '''创造一组包含n个LineCtrls对象的列表'''
-    def __init__(self,panel,grid,StartPos=(0,0),n=5,IsHasChoice=True ,width=100):
+        self.TextCtrl=wx.TextCtrl(panel,size=(width,-1),style=wx.TE_RIGHT)
+        self.Choice = wx.Choice(panel,choices=myitems)
+
+class ctrls(object):
+    '''创造一组包含1个类别名的StaticText 和 n个StaticText TextCtrl Choice 对象的列表'''
+    def __init__(self,panel,grid,class_str,IsHasChoice=True ,width=100):
         '''n: CtrlList包含的控件个数
         IsTextCtrl : 要TextCtrl还是Choic,默认TextCtrl'''
+        global currentline1,currentline2
+        self.head=wx.StaticText(panel,label=class_str, style=wx.ALIGN_CENTER)
         self.clist=[]
-        for i in range(n):
-            self.clist.append(LineCtrls(panel,width))
+        try:
+            l = 公共变量.attribute_dict[class_str]
+            print('l= ',l)
+        except :
+            l=[]
+            print('问题语句','l = 公共变量.attribute_dict[class_str]')
+        try:
+            myitem=公共变量.choiceitems_dict[class_str]
+            print('myitem = ',myitem)
+        except :
+            myitem=[]
+            print('问题语句','myitem=公共变量.choiceitems_dict[class_str]')
+        for i in l:
+            self.clist.append(LineCtrls(panel,mylabel=i,myitems=myitem))
         if IsHasChoice:
+            grid.Add(self.head,pos=(currentline2,2),flag= wx.ALIGN_CENTER)
+            try:
+                self.clist[0].TextCtrl.Size=(500,-1)
+            except:
+                pass
             for i in self.clist:
-                grid.Add(i.StaticText ,pos=(StartPos[0]+self.clist.index(i),StartPos[1]),flag= wx.ALIGN_CENTER | wx.ALL)
-                print('try:',StartPos[0]+self.clist.index(i),StartPos[1])
-                grid.Add(i.TextCtrl ,pos=(StartPos[0]+self.clist.index(i),StartPos[1]+1),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+                x=self.clist.index(i)+1+currentline2
+                grid.Add(i.StaticText,pos=(x,2),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+                self.clist[self.clist.index(i)].TextCtrl.Size=(500,-1)
+                print(i.TextCtrl.Size)
+                grid.Add(i.TextCtrl  ,pos=(x,3),span=(1,2),flag=  wx.ALIGN_CENTER)
+                grid.Add(i.Choice    ,pos=(x,6),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+            currentline2 = currentline2 + len(self.clist) + 1
         else:
+            grid.Add(self.head,pos=(currentline1,0),flag= wx.ALIGN_CENTER )
             for i in self.clist:
-                print('False try:',StartPos[0]+self.clist.index(i),StartPos[1])
-                x=StartPos[0]+self.clist.index(i)
-                grid.Add(i.StaticText ,pos=(x,StartPos[1]  ),flag= wx.ALIGN_CENTER | wx.ALL)
-                grid.Add(i.TextCtrl   ,pos=(x,StartPos[1]+1),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
-                grid.Add(i.Choice      ,pos=(x,StartPos[1]+2),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+                x=self.clist.index(i)+1+currentline1
+                grid.Add(i.StaticText,pos=(x,0),flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+                grid.Add(i.TextCtrl  ,pos=(x,1))#,flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+            currentline1 = currentline1 + len(self.clist) + 1
+
+
 
 class Mywin(wx.Frame):
     '''创建一个窗口类.\n
@@ -58,8 +88,8 @@ class Mywin(wx.Frame):
             None, title='Dota2 游戏数据修改', size=(800, 650))
         ################################################################
         #对象的属性#
-        self.error_str1 = '无此键值'  # 读取属性时出现不存在的属性显示键值
-        self.error_str2 = '错误键值' 
+        self.str_null = '无此键值'  # 读取属性时出现不存在的属性显示键值
+        self.str_error = '错误键值' 
         self.unit_dict = {}
         self.unit_name_list = []
         self.ctrl_list = []
@@ -117,37 +147,47 @@ class Mywin(wx.Frame):
     def select_unit(self, event):
         self.SelectUnit=event.GetEventObject().GetStringSelection()
         self.Title = self.SelectUnit
-        def refresh_att(ctrl_list, attribute_dict):
+        def refresh_att(ctrl_list):
             ''''''
             selete_unit = self.unit_dict[self.SelectUnit]#选择的英雄的属性字典
             for i in ctrl_list:
                 # 属性中文名
                 str1 = i.StaticText.GetLabelText()
                 # 属性英文名
+                str2=''
                 try:
-                    str2 = attribute_dict[str1]
+                    str2 = 公共变量.translation[str1]
                     print('属性',str1,str2)
                 except KeyError:
                     print('错误,跳过  str1 =', str1)
-                    str3 = self.error_str1
+                    str3 = self.str_null
                     next
                 except:
+                    str3 = self.str_error
                     print('错误')
                 # 属性值
+                str3=''
                 try:
                     str3 = selete_unit[str2]
                 except KeyError:
-                    str3 = self.error_str1
+                    str3 = self.str_null
                 except:
-                    str3 = self.error_str2
+                    str3 = self.str_error
                 # 属性值赋给文本框
-                ctrl_list[ctrl_list.index(i)].TextCtrl.SetLabel(str3)
+                str4=''
+                try:
+                    str4= 公共变量.translation[str3]  # 属性值的中文名
+                except:
+                    str4 = str3
+                ctrl_list[ctrl_list.index(i)].TextCtrl.SetLabel(str4)
         ##############################################
-        refresh_att(self.CtrlList1.clist, 公共变量.attribute_name_dict)
-        refresh_att(self.CtrlList2.clist, 公共变量.skill_dict)
+        for i in self.leftctrls:
+            refresh_att(i.clist)
+        for i in self.rightctrls:
+            refresh_att(i.clist)
+        #refresh_att(self.CtrlList2.clist, 公共变量.skill_dict)
         #secondChoice.SetItems(newItems)
         #Choice(parent, id=ID_ANY,  choices=[])
-
 
     def check_readData(self, Event):
         '''点击 读取数据按钮 时发生的事件'''
@@ -158,23 +198,20 @@ class Mywin(wx.Frame):
 
     def add_ctrl(self, grid, panel):
         '''在右侧窗口添加控件以显示属性'''
-        l = 公共变量.attribute_name_dict
-        self.CtrlList1=CtrlList(panel,grid,(1,0),n=len(l))
-        n = 1
-        for i in l:
-            self.CtrlList1.clist[n-1].StaticText.SetLabel(i)
-            n = n+1
-        self.CtrlList2=CtrlList(panel,grid,(1,2),n=len(公共变量.skill_dict),IsHasChoice=False)
-        n = 1
-        for i in list(公共变量.skill_dict.keys()):
-            self.CtrlList2.clist[n-1].StaticText.SetLabel(i)
-            n = n+1
-        #############################################################
-        for i in range(0,5):
-            self.CtrlList2.clist[i].Choice.SetItems(公共变量.ChoiceItems_list_heroskill)
-        for i in range(5,len(公共变量.skill_dict)):
-            self.CtrlList2.clist[i].Choice.SetItems(公共变量.ChoiceItems_list_spacialskill)
-            #self.CtrlList2.clist[i].Choice.Select
+        ############################################################
+        leftattribute=list(公共变量.attribute_dict.keys())[:5]#['护甲','攻击']
+        self.leftctrls=[]
+        for i in leftattribute:
+            self.leftctrls.append(ctrls(panel,grid,class_str=i,IsHasChoice=False))
+
+        #######################################################
+        rightattribute=list(公共变量.attribute_dict.keys())[-5:]   #['技能']
+        self.rightctrls=[]
+        for i in rightattribute:
+            self.rightctrls.append(ctrls(panel,grid,class_str=i))
+
+
+
 
 def 启动窗口():
     app = wx.App()
