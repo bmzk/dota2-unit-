@@ -4,6 +4,9 @@ file = 'npc_heroes.txt'
 file = 'npc.txt'
 jsonfile = 'npc_heroes.json'
 
+str_null = '无此键值'  # 读取属性时出现不存在的属性显示键值
+str_error = '错误键值' 
+
 #属性字典#
 attribute_dict = {
     '护甲': ['物理护甲', '魔法抗性'],

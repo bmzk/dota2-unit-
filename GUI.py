@@ -15,7 +15,7 @@ currentline2=0      #向grid添加控件时当前所在的行号,第一列
 ########################
 class LineCtrls(object):
     '''创建创造一个控件对象,包括StaticText \TextCtrl \wx.Choice控件'''
-    def __init__(self, panel, mylabel='',myitems=[] ,isspan=False,width=150):
+    def __init__(self, panel, mylabel='',myitems=[] ,isspan=False,width=150,unit_dict={}):
         '''构造函数,创造一组控件,包括2个标签和2个文本框 \n
         mylabel : 标签中的文字列表 \n
         myitems : choices的选择项列表\n
@@ -25,6 +25,20 @@ class LineCtrls(object):
         self.StaticText.SetBackgroundColour('white') #背景色
         self.TextCtrl=wx.TextCtrl(panel,size=(width,-1),style=wx.TE_RIGHT)
         self.Choice = wx.Choice(panel,choices=myitems)
+        #key
+        self.key_cn=mylabel
+        self.key_eng=''
+        try:
+            self.key_eng = 公共变量.translation[self.key_cn]
+            print('属性',self.key_cn,self.key_eng)
+        except KeyError:
+            print('错误,找不到key,跳过  self.key_cn =', self.key_cn)
+            self.key_eng =公共变量.str_null
+            next
+        except:
+            print('其他错误')
+        self.value_cn=''
+        self.value_eng=''
 
 class ctrls(object):
     '''创造一组包含1个类别名的StaticText 和 n个StaticText TextCtrl Choice 对象的列表'''
