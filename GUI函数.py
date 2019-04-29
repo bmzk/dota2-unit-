@@ -14,9 +14,20 @@ def readData():
     print('readData end')
     return unit_dict
 
-def saveData(object):
+def saveData(unitdict):
+    f=open('20190429.txt','w')
+    f.write('"DOTAHeroes" \n')
+    f.write('{\n')
+    f.write('	"Version"		"1"\n')
+    for i in unitdict:
+        f.write('	"'+i+'"\n')
+        f.write('	{\n')
+        for j in unitdict[i]:
+            f.write('		"'+j+'"		"'+str(unitdict[i][j])+'"\n')
+        f.write('	}\n')
+    f.write('	}\n')
     print('saveData')
-
+    f.close()
     pass
 def resetData(object):
     print('resetData')
@@ -38,6 +49,5 @@ def readToDb(sourceFile):
         asd = mycol.insert_one(mydict) 
         print(i,"",asd)
     pass
-
 
 

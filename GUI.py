@@ -69,11 +69,12 @@ class LineCtrls(object):
             rv = 公共变量.translation[self.value_eng()]
             #print('属性',self.value_eng(),rv)
         except KeyError:
-            print('错误,找不到key,跳过  self.value_eng =', self.value_eng())
+            print('错误,找不到key  self.value_eng =', self.value_eng())
             rv =self.value_eng()
         except:
             print('其他错误')
         return rv
+
 
 class ctrls(object):
     '''创造一组控件,第1行为1个 StaticText ,作为标题,用于显示一类属性的名称.\n
@@ -178,7 +179,7 @@ class  Mywin(wx.Frame):
             self.panel_left, choices=self.unit_name_list, style=wx.LB_SINGLE)
         self.grid_left.Add(self.unit_name_list_box, 90)
         # 绑定数据
-        self.读取数据.Bind(wx.EVT_BUTTON, self.check_readData)
+        self.读取数据.Bind(wx.EVT_BUTTON, self.check_readdata)
         self.Bind(wx.EVT_LISTBOX, self.select_unit,
                   self.unit_name_list_box)  # 绑定,点击左侧选择项时发生事件
         ############################################################
@@ -211,12 +212,32 @@ class  Mywin(wx.Frame):
             refresh_att(i.linectrlslist)
         for i in self.rightctrls:
             refresh_att(i.linectrlslist)
-    def check_readData(self, Event):
+    def check_readdata(self, Event):
         '''点击 读取数据按钮 时发生的事件'''
         self.unit_dict = GUI函数.readData()
         self.unit_name_list = list(self.unit_dict.keys())
         print(self.unit_name_list)
         self.unit_name_list_box.Items = self.unit_name_list
+
+    def check_savedata(self, Event):
+        '''点击 保存数据按钮 时发生的事件'''
+
+        for i in self.leftctrls:
+            for j in i.linectrlslist:
+                self.unit_dict[self.SelectUnit][j.key_eng()]=j.TextCtrl.GetLabelText()
+        for i in self.midctrls:
+            for j in i.linectrlslist:
+                self.unit_dict[self.SelectUnit][j.key_eng()]=j.TextCtrl.GetLabelText()
+        for i in self.rightctrls:
+            for j in i.linectrlslist:
+                temp = j.Choice.GetStringSelection()
+                if  temp !='':
+                    try:
+                        temp=公共变量.translation[temp]
+                        self.unit_dict[self.SelectUnit][j.key_eng()]=temp
+                    except:
+                        print('check_savedata 错误, 公共变量.translation 无',temp)
+        GUI函数.saveData(self.unit_dict)
 
     def add_ctrl(self, grid, panel):
         '''在右侧窗口添加控件以显示属性'''
@@ -243,26 +264,17 @@ class  Mywin(wx.Frame):
             self.rightctrls.append(ctrls(panel,grid,i,4,width=120))
         ########################################################
         # 添加保存按钮
-        self.保存数据 = wx.Button(self.panel_right, label="保存数据",pos=(22,0))
-        #self.grid_right.Add(self.保存数据, (22,0)
-        # self.label_ = wx.StaticText(
-        #     self.panel_left, label='', style=wx.ALIGN_CENTER)
-        # self.grid_left.Add(self.label_, 0)
-        # self.unitlabel = wx.StaticText(self.panel_left, label='选择单位')
-        # self.grid_left.Add(self.unitlabel, 0)
-        # self.unit_name_list_box = wx.ListBox(
-        #     self.panel_left, choices=self.unit_name_list, style=wx.LB_SINGLE)
-        # self.grid_left.Add(self.unit_name_list_box, 90)
-        # # 绑定数据
-        # self.读取数据.Bind(wx.EVT_BUTTON, self.check_readData)
-        # self.Bind(wx.EVT_LISTBOX, self.select_unit,
-        #           self.unit_name_list_box)  # 绑定,点击左侧选择项时发生事件
+        self.保存数据 = wx.Button(panel, label="保存数据",pos=(22,0))
+        print(公共变量.currentline)
+        grid.Add(self.保存数据,pos=(公共变量.currentline,2),flag= wx.ALIGN_CENTER)
+        self.保存数据.Bind(wx.EVT_BUTTON, self.check_savedata)
 
 
 def 启动窗口():
     app = wx.App()
-    Mywin()
+    win=Mywin()
     app.MainLoop()
 
 
 启动窗口()
+
