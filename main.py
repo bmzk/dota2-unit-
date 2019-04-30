@@ -1,10 +1,24 @@
-import json
-import random
-import function_readfile
-import function_writefile
-import 公共变量
-import GUI
+#
+l1=  [    '加力量',
+    '加敏捷',
+    '加智力',
+    '加全属性',
 
+    '加生命',
+    '加生命恢复',
+    '魔法',
+    '魔法恢复',
 
-#启动窗口,显示单位及其属性
-GUI.启动窗口()
+    '加攻击',
+    '加攻击速度',
+    '加护甲',
+    '加移速']
+
+l2=['strength','agility','intelligence','all_stats',
+'hp','hp_regen','mp','mp_regen',
+'attack','attack_speed','armor',
+'movement_speed']
+for j in range(len(l1)):
+    for i in range(100):
+        print('"'+l1[j],str(i)+'" : "special_bonus_'+l2[j]+'_'+str(i)+
+        '",')
