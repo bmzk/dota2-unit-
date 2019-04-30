@@ -1,12 +1,11 @@
-import wx
 '''定义公共变量'''
-file = 'npc_heroes.txt'
+#file = 'npc_heroes.txt'
 file = 'npc.txt'
 jsonfile = 'npc_heroes.json'
 
 str_null = '无此键值'  # 读取属性时出现不存在的属性显示键值
-str_error = '错误键值' 
-
+str_error= '错误键值' 
+currentline=0
 #属性字典#
 attribute_dict = {
     '护甲': ['物理护甲', '魔法抗性'],
@@ -33,10 +32,10 @@ choiceitems_dict = {
 }
 
 translation = {
+    ####基本属性###############################
     ####左侧##########################################
     #护甲#
     '物理护甲': 'ArmorPhysical',
-    'ArmorPhysical':'物理护甲',
     '魔法抗性': 'MagicalResistance',
     #攻击#
     '最小攻击力': "AttackDamageMin",
@@ -44,7 +43,6 @@ translation = {
     '攻击速度': "AttackRate",
     '主动攻击范围': "AttackAcquisitionRange",
     '攻击距离': "AttackRange",
-
     #属性###########################
     '初始力量': "AttributeBaseStrength",
     '力量成长': "AttributeStrengthGain",
@@ -61,7 +59,6 @@ translation = {
     '魔法恢复速度': "StatusManaRegen",
     #视野#
     '白天视野': 'VisionDaytimeRange',
-    ####右侧##########################################
     #技能#
     '技能1': 'Ability1',
     '技能2': 'Ability2',
@@ -78,16 +75,24 @@ translation = {
     '20级左': 'Ability15',
     '25级右': 'Ability16',
     '25级左': 'Ability17',
+    ###################################################
+    #####技能##########################################
+    '无技能':'generic_hidden',
+    '护甲+7':"special_bonus_armor_7",
     # 主属性
     '英雄主属性': "AttributePrimary",
     #### 其他 ##########################################
     '力量': "DOTA_ATTRIBUTE_STRENGTH",
+    "DOTA_ATTRIBUTE_STRENGTH":'力量',
     '敏捷': "DOTA_ATTRIBUTE_AGILITY",
     '智力': "DOTA_ATTRIBUTE_INTELLECT",
+    ####choice#########################################
+    '腐肉堆积':'pudge_flesh_heap',
+    '死亡一指': 'lion_finger_of_death',
     #### 结尾 ##########################################
     'null': 'null'
 }
-currentline=0
+
 
 def t():
     '''自动反转 translation的属性与值'''
