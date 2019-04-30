@@ -1,6 +1,7 @@
 '''定义公共变量'''
-#file = 'npc_heroes.txt'
-file = 'npc.txt'
+file = 'npc_heroes.txt'
+#file = 'npc.txt'
+
 jsonfile = 'npc_heroes.json'
 
 str_null = '无此键值'  # 读取属性时出现不存在的属性显示键值
@@ -24,7 +25,9 @@ attribute_dict = {
 }
 
 choiceitems_dict = {
-    '技能': ['', 'pudge_flesh_heap', 'lion_finger_of_death', '技能3', '技能4', '技能5', '技能6'],
+    '技能': ['', 
+        '帕吉-腐肉堆积', 'lion_finger_of_death', '斯拉达-深海重击', 
+        '技能4', '技能5', '技能6'],
     '天赋': ['', '10级右', '10级左', '15级右', '15级左', '20级右', '20级左', '25级右', '25级左'],
     '英雄主属性': ['', '力量', '敏捷', '智力'],
     ###############################
@@ -81,20 +84,7 @@ translation = {
     #普通技能
     '无技能':'generic_hidden',
 
-    #天赋技能
-    #加力量
-    #加敏捷
-    #加智力
-    #加全属性
-    #加生命
-    #加生命恢复
-    #魔法
-    #魔法恢复
-    #加攻击
-    #加护甲
-    #加移速
-    #'':special_bonus_strength,
-    '护甲+7':"special_bonus_armor_7",
+
     # 主属性
     '英雄主属性': "AttributePrimary",
     #### 其他 ##########################################
@@ -103,8 +93,9 @@ translation = {
     '敏捷': "DOTA_ATTRIBUTE_AGILITY",
     '智力': "DOTA_ATTRIBUTE_INTELLECT",
     ####choice#########################################
-    '腐肉堆积':'pudge_flesh_heap',
+    '帕吉-腐肉堆积':'pudge_flesh_heap',
     '死亡一指': 'lion_finger_of_death',
+    '斯拉达-深海重击':'slardar_bash',
     #### 结尾 ##########################################
     'null': 'null'
 }

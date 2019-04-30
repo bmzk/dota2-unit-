@@ -1,5 +1,5 @@
 '''读取文件,产生一个复制备份和一个json格式文件'''
-def rf(r_file='npc_heroes2.txt'):
+def rf(r_file):
     '''读取文件,产生一个复制备份和一个json格式文件'''
     #产生复制文件
     import os
@@ -9,10 +9,10 @@ def rf(r_file='npc_heroes2.txt'):
     os.system('copy '+r_file+' ' + newfile)
     #产生json文件
     f=open(r_file,'r',encoding='utf-8')
+    print('正在读取源文件',r_file)
     lines = f.readlines()
-    print('正在读取json文件,文件为',f)
-    file_w=open(r_file[:-3]+'json','w+',encoding='utf-8')
-
+    file_w=open('npc_heroes.json','w+',encoding='utf-8')
+    print('正在读取json文件,文件为','npc_heroes.json')
     linelist=[]
     returnstring='{'
     for i in lines:

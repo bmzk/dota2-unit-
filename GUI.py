@@ -52,9 +52,6 @@ class LineCtrls2(object):
         
         return value
 
-
-
-
 class LineCtrls(LineCtrls2):
     '''创建创造一个控件对象,包括:\n
         StaticText : 显示属性名称\n
@@ -65,7 +62,6 @@ class LineCtrls(LineCtrls2):
         '''构造函数,创造一组控件,包括2个标签和2个文本框 \n'''
         LineCtrls2.__init__(self, panel, width, mylabel,  unit_dict={})
         self.Choice = wx.Choice(panel, choices=myitems)
-
 
 class ctrls(object):
     '''创造一组控件,第1行为1个 StaticText ,作为标题,用于显示一类属性的名称.\n
@@ -109,20 +105,16 @@ class ctrls(object):
         print('创建了1组属性控件',class_str)
 
 class Mywin(wx.Frame):
-    '''创建一个窗口类.\n
-    '''
-
+    '''创建一个窗口类.\n'''
     def __init__(self):
-        '''构造函数\n
-        GridBagSizer : 子构件可被添加到网格中的特定单元.
-        一个子物件可以在水平和/或垂直地占据一个以上的单元.
-        主要使用方法 : Wx.GridbagSizer().Add(control, pos, span, flags, border) \n
-        control : 控件 \n
-        pos : 控件位置,第几行第几列,从0开始\n
-        span : 控件跨越的行数和列数\n
-        '''
-        super(Mywin, self).__init__(
-            None, title='Dota2 游戏数据修改', size=(800, 700))
+        ''' 构造函数\n
+            GridBagSizer : 子构件可被添加到网格中的特定单元.\n
+            一个子物件可以在水平和/或垂直地占据一个以上的单元.\n
+            主要使用方法 : Wx.GridbagSizer().Add(control, pos, span, flags, border) \n
+            control : 控件 \n
+            pos : 控件位置,第几行第几列,从0开始\n
+            span : 控件跨越的行数和列数\n'''
+        super(Mywin, self).__init__(None, title='Dota2 游戏数据修改', size=(800, 700))
         ################################################################
         #对象的属性#
         self.unit_dict = {}
@@ -193,7 +185,6 @@ class Mywin(wx.Frame):
         # 绑定数据
         self.Bind(wx.EVT_LISTBOX, self.select_unit,
                   self.unit_name_list_box)  # 绑定,点击左侧选择项时发生事件
-
 
     def onRadioBox(self,event):
         rb = event.GetEventObject() 
@@ -282,7 +273,7 @@ class Mywin(wx.Frame):
         #添加按钮 重生成json
         self.重生成json = wx.Button(panel, label="重生成json")
         grid.Add(self.重生成json,  pos=(公共变量.currentline+2, 1), flag=wx.ALIGN_CENTER)
-        self.重生成json.Bind(wx.EVT_BUTTON, self.check_readdata)
+        self.重生成json.Bind(wx.EVT_BUTTON, self.creat_json)
 
 def 启动窗口():
     app = wx.App()
