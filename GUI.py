@@ -85,6 +85,74 @@ class LineCtrls(object):
         return rv
 
 
+class LineCtrls2(object):
+    '''创建创造一个控件对象,无wx.Choice,包括:\n
+        StaticText:显示属性名称\n
+        TextCtrl:显示属性值\n
+        key_cn:属性名(中文)\n
+        key_eng():属性名(英文)\n
+        value_cn:属性值(中文)\n
+        value_eng:属性值(英文)'''
+
+    def __init__(self, panel, width, mylabel='',  unit_dict={}):
+        '''构造函数,创造一组控件,包括2个标签和2个文本框 \n
+        mylabel : 标签中的文字列表 \n
+        panel=wx.Panel()\n
+        selete_unit : 当前选择的单位'''
+        # 创建一个标签,坐标(n,0)
+        self.StaticText = wx.StaticText(
+            panel, label=mylabel, style=wx.ALIGN_RIGHT)
+        self.StaticText.SetBackgroundColour('white')  # 背景色
+        self.TextCtrl = wx.TextCtrl(panel, size=(width, -1), style=wx.TE_RIGHT)
+        # key
+        self.key_cn = mylabel
+        self.selete_unit = {}
+
+    def key_eng(self):
+        '''根据属性值中文获取属性值(英文).\n'''
+        value = ''
+        try:
+            value = 公共变量.translation[self.key_cn]
+            # print('属性',self.key_cn,value)
+        except KeyError:
+            print('错误,根据属性名(中文)获取属性名(英文),在翻译字典中未找到键值  self.key_cn =', self.key_cn)
+            value = 公共变量.str_null
+        except:
+            print('其他错误')
+        # value='ArmorPhysical'##############test
+        return value
+
+    def value_eng(self):
+        '''根据 属性名(key_eng()) 获取属性值,值为英文.\n
+            selete_unit:表示一个单位的字典,内容形式为:\n
+            { key1 : value1 , key2 : value2 , ... , keyn : valuen }
+        '''
+        value = ''
+        try:
+            value = self.selete_unit[self.key_eng()]
+        except KeyError:
+            value = 公共变量.str_null
+        except:
+            value = 公共变量.str_error
+        return value
+
+    def value_cn(self):
+        '''根据属性值(英文)获取属性值(中文).\n
+            '''
+        rv = ''
+        try:
+            rv = str(int(self.value_eng()))
+        except :
+            try:
+                rv = str(float(self.value_eng()))
+            except :
+                rv = self.value_eng()
+        for i in 公共变量.translation:
+            if 公共变量.translation[i]==self.value_eng():
+                rv = i
+        return rv
+
+
 class ctrls(object):
     '''创造一组控件,第1行为1个 StaticText ,作为标题,用于显示一类属性的名称.\n
         其余每行为一组 LineCtrls 控件,每个 LineCtrls 控件包含三个控件:\n
@@ -101,49 +169,29 @@ class ctrls(object):
         self.head = wx.StaticText(
             panel, label=class_str, style=wx.ALIGN_CENTER)
         self.linectrlslist = []
-        try:
-            l = 公共变量.attribute_dict[class_str]
-            #print('l= ',l)
-        except:
-            l = []
-            print('问题语句', 'l = 公共变量.attribute_dict[class_str]')
+        l = 公共变量.attribute_dict[class_str]
         try:
             myitem = 公共变量.choiceitems_dict[class_str]
             #print('myitem = ',myitem)
         except:
             myitem = []
             print('问题语句', 'myitem=公共变量.choiceitems_dict[class_str]')
-        for i in l:
-            self.linectrlslist.append(
-                LineCtrls(panel, width, mylabel=i, myitems=myitem))
+
         公共变量.currentline = 公共变量.currentline+1
+        grid.Add(self.head, pos=(公共变量.currentline, colunm),flag=wx.ALIGN_CENTER)
         if IsHasChoice:
-            grid.Add(self.head, pos=(公共变量.currentline, colunm),
-                     flag=wx.ALIGN_CENTER)
-            try:
-                self.linectrlslist[0].TextCtrl.Size = (500, -1)
-            except:
-                pass
-            for i in self.linectrlslist:
-                x = self.linectrlslist.index(i)+1+公共变量.currentline
-                grid.Add(i.StaticText, pos=(x, colunm),
-                         flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
-                self.linectrlslist[self.linectrlslist.index(
-                    i)].TextCtrl.Size = (500, -1)
-                grid.Add(i.TextCtrl, pos=(x, colunm+1), flag=wx.ALIGN_CENTER)
-                grid.Add(i.Choice, pos=(x, colunm+2),
-                         flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
-            公共变量.currentline = 公共变量.currentline + len(self.linectrlslist) + 1
+            for i in l:
+                self.linectrlslist.append(LineCtrls(panel, width, mylabel=i, myitems=myitem))
         else:
-            grid.Add(self.head, pos=(公共变量.currentline, colunm),
-                     flag=wx.ALIGN_CENTER)
-            for i in self.linectrlslist:
-                x = self.linectrlslist.index(i)+1+公共变量.currentline
-                grid.Add(i.StaticText, pos=(x, colunm),
-                         flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
-                # ,flag= wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
-                grid.Add(i.TextCtrl, pos=(x, colunm+1))
-            公共变量.currentline = 公共变量.currentline + len(self.linectrlslist) + 1
+            for i in l:
+                self.linectrlslist.append(LineCtrls2(panel, width, mylabel=i))
+        for i in self.linectrlslist :
+            x = self.linectrlslist.index(i)+1+公共变量.currentline
+            grid.Add(i.StaticText, pos=(x, colunm),flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+            grid.Add(i.TextCtrl, pos=(x, colunm+1), flag=wx.ALIGN_CENTER)
+            if IsHasChoice:
+                grid.Add(i.Choice, pos=(x, colunm+2),flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+        公共变量.currentline = 公共变量.currentline + len(self.linectrlslist) + 1
 
 
 class Mywin(wx.Frame):
@@ -271,7 +319,7 @@ class Mywin(wx.Frame):
         leftattribute = list(公共变量.attribute_dict.keys())[:3]  # ['护甲','攻击']
         self.leftctrls = []
         for i in leftattribute:
-            #self.leftctrls.append(ctrls(panel, grid, i, 0, False, width=75))
+            self.leftctrls.append(ctrls(panel, grid, i, 0, False, width=75))
             pass
         #######################################################
         公共变量.currentline = 0
@@ -284,10 +332,10 @@ class Mywin(wx.Frame):
         rightattribute = list(公共变量.attribute_dict.keys())[-4:]  # ['技能']
         self.rightctrls = []
         for i in rightattribute:
-            pass#self.rightctrls.append(ctrls(panel, grid, i, 4, width=120))
+            self.rightctrls.append(ctrls(panel, grid, i, 4, width=120))
         ########################################################
         # 添加保存按钮
-        self.保存数据 = wx.Button(panel, label="保存数据", pos=(22, 0))
+        self.保存数据 = wx.Button(panel, label="保存数据")
         grid.Add(self.保存数据, pos=(公共变量.currentline, 2), flag=wx.ALIGN_CENTER)
         self.保存数据.Bind(wx.EVT_BUTTON, self.check_savedata)
 
@@ -296,3 +344,4 @@ def 启动窗口():
     app = wx.App()
     win = Mywin()
     app.MainLoop()
+启动窗口()

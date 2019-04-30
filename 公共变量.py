@@ -59,6 +59,7 @@ translation = {
     '魔法恢复速度': "StatusManaRegen",
     #视野#
     '白天视野': 'VisionDaytimeRange',
+    '夜间视野': "VisionNighttimeRange",
     #技能#
     '技能1': 'Ability1',
     '技能2': 'Ability2',
