@@ -13,84 +13,8 @@ import 公共变量
 
 
 
-#全局变量######################
-# 公共变量.currentline=0      #向grid添加控件时当前所在的行号
-########################
-
-
-class LineCtrls(object):
-    '''创建创造一个控件对象,包括:\n
-        StaticText:显示属性名称\n
-        TextCtrl:显示属性值\n
-        wx.Choice:从选择项中选择属性值\n
-        key_cn:属性名(中文)\n
-        key_eng():属性名(英文)\n
-        value_cn:属性值(中文)\n
-        value_eng:属性值(英文)'''
-
-    def __init__(self, panel, width, mylabel='', myitems=[], unit_dict={}):
-        '''构造函数,创造一组控件,包括2个标签和2个文本框 \n
-        mylabel : 标签中的文字列表 \n
-        myitems : choices的选择项列表\n
-        panel=wx.Panel()\n
-        selete_unit : 当前选择的单位'''
-        # 创建一个标签,坐标(n,0)
-        self.StaticText = wx.StaticText(
-            panel, label=mylabel, style=wx.ALIGN_RIGHT)
-        self.StaticText.SetBackgroundColour('white')  # 背景色
-        self.TextCtrl = wx.TextCtrl(panel, size=(width, -1), style=wx.TE_RIGHT)
-        self.Choice = wx.Choice(panel, choices=myitems)
-        # key
-        self.key_cn = mylabel
-        self.selete_unit = {}
-
-    def key_eng(self):
-        '''根据属性值中文获取属性值(英文).\n'''
-        value = ''
-        try:
-            value = 公共变量.translation[self.key_cn]
-            # print('属性',self.key_cn,value)
-        except KeyError:
-            print('单位无此属性,或翻译字典中未找到键值  self.key_cn =', self.key_cn)
-            value = 公共变量.str_null
-        except:
-            print('其他错误')
-        # value='ArmorPhysical'##############test
-        return value
-
-    def value_eng(self):
-        '''根据 属性名(key_eng()) 获取属性值,值为英文.\n
-            selete_unit:表示一个单位的字典,内容形式为:\n
-            { key1 : value1 , key2 : value2 , ... , keyn : valuen }
-        '''
-        value = ''
-        try:
-            value = self.selete_unit[self.key_eng()]
-        except KeyError:
-            value = 公共变量.str_null
-        except:
-            value = 公共变量.str_error
-        return value
-
-    def value_cn(self):
-        '''根据属性值(英文)获取属性值(中文).\n
-            '''
-        rv = ''
-        try:
-            rv = str(int(self.value_eng()))
-        except :
-            try:
-                rv = str(float(self.value_eng()))
-            except :
-                rv = self.value_eng()
-        for i in 公共变量.translation:
-            if 公共变量.translation[i]==self.value_eng():
-                rv = i
-        return rv
-
-
 class LineCtrls2(object):
-    '''创建创造一个控件对象,无wx.Choice,包括:\n
+    '''baseclass,创建创造一个控件对象,无wx.Choice,包括:\n
         StaticText:显示属性名称\n
         TextCtrl:显示属性值\n
         key_cn:属性名(中文)\n
@@ -104,28 +28,15 @@ class LineCtrls2(object):
         panel=wx.Panel()\n
         selete_unit : 当前选择的单位'''
         # 创建一个标签,坐标(n,0)
-        self.StaticText = wx.StaticText(
-            panel, label=mylabel, style=wx.ALIGN_RIGHT)
+        self.StaticText = wx.StaticText(panel, label=mylabel, style=wx.ALIGN_RIGHT)
         self.StaticText.SetBackgroundColour('white')  # 背景色
         self.TextCtrl = wx.TextCtrl(panel, size=(width, -1), style=wx.TE_RIGHT)
         # key
-        self.key_cn = mylabel
         self.selete_unit = {}
-
-    def key_eng(self):
-        '''根据属性值中文获取属性值(英文).\n'''
-        value = ''
-        try:
-            value = 公共变量.translation[self.key_cn]
-            # print('属性',self.key_cn,value)
-        except KeyError:
-            print('错误,根据属性名(中文)获取属性名(英文),在翻译字典中未找到键值  self.key_cn =', self.key_cn)
-            value = 公共变量.str_null
-        except:
-            print('其他错误')
-        # value='ArmorPhysical'##############test
-        return value
-
+        self.key_cn  = lambda : mylabel
+        self.key_eng = lambda : GUI函数.cn_to_eng(mylabel)
+        #根据属性值中文获取属性值(英文)
+        self.value_cn= lambda : GUI函数.eng_to_cn(self.value_eng())
     def value_eng(self):
         '''根据 属性名(key_eng()) 获取属性值,值为英文.\n
             selete_unit:表示一个单位的字典,内容形式为:\n
@@ -138,23 +49,22 @@ class LineCtrls2(object):
             value = 公共变量.str_null
         except:
             value = 公共变量.str_error
+        
         return value
 
-    def value_cn(self):
-        '''根据属性值(英文)获取属性值(中文).\n
-            '''
-        rv = ''
-        try:
-            rv = str(int(self.value_eng()))
-        except :
-            try:
-                rv = str(float(self.value_eng()))
-            except :
-                rv = self.value_eng()
-        for i in 公共变量.translation:
-            if 公共变量.translation[i]==self.value_eng():
-                rv = i
-        return rv
+
+
+
+class LineCtrls(LineCtrls2):
+    '''创建创造一个控件对象,包括:\n
+        StaticText : 显示属性名称\n
+        TextCtrl   : 显示属性值\n
+        wx.Choice  : 从选择项中选择属性值\n'''
+
+    def __init__(self, panel, width, mylabel='', myitems=[], unit_dict={}):
+        '''构造函数,创造一组控件,包括2个标签和2个文本框 \n'''
+        LineCtrls2.__init__(self, panel, width, mylabel,  unit_dict={})
+        self.Choice = wx.Choice(panel, choices=myitems)
 
 
 class ctrls(object):
@@ -238,30 +148,7 @@ class Mywin(wx.Frame):
             flag参数可以使用 '|'来产生组合的多个flags。
             常用的flag参数：wx.TOPwx.BOTTOMwx.LEFTwx.RIGHTwx.ALLwx.EXPAND
         border：调整控件的边框的宽度，此参数一般和flag参数配合使用。'''
-        # 左侧窗口添加内容
-        #添加按钮 重生成json
-        self.重生成json = wx.Button(self.panel_left, label="重生成json")
-        self.grid_left.Add(self.重生成json, 0)
-        self.重生成json.Bind(wx.EVT_BUTTON, self.check_readdata)
-        #空白
-        self.label_ = wx.StaticText(self.panel_left)
-        self.grid_left.Add(self.label_, 0)
-        #添加按钮 读取数据
-        self.读取数据 = wx.Button(self.panel_left, label="读取数据",style=wx.EXPAND)
-        self.grid_left.Add(self.读取数据, 0)
-        self.读取数据.Bind(wx.EVT_BUTTON, self.check_readdata)
-        #空白
-        self.label_ = wx.StaticText(self.panel_left)
-        self.grid_left.Add(self.label_, 0)
-        #单位列表
-        self.unitlabel = wx.StaticText(self.panel_left, label='选择单位')
-        self.grid_left.Add(self.unitlabel, 0)
-        self.unit_name_list_box = wx.ListBox(
-            self.panel_left, choices=self.unit_name_list, style=wx.LB_SINGLE)
-        self.grid_left.Add(self.unit_name_list_box, 90)
-        # 绑定数据
-        self.Bind(wx.EVT_LISTBOX, self.select_unit,
-                  self.unit_name_list_box)  # 绑定,点击左侧选择项时发生事件
+        self.leftwindows_init(self.panel_left,self.grid_left)# 左侧窗口添加内容
         ############################################################
         #右侧窗口###################################################
         self.grid_right = wx.GridBagSizer(0, 0)  # 右侧布局控件,其它控件将放在其内,用于单位显示属性
@@ -275,6 +162,45 @@ class Mywin(wx.Frame):
         self.panel_right.SetSizerAndFit(self.grid_right)
         self.Center()
         self.Show()
+
+    def leftwindows_init(self,panel,grid):
+        # 左侧窗口添加内容
+        #添加按钮 读取数据
+        self.读取数据 = wx.Button(self.panel_left, label="读取数据",style=wx.EXPAND)
+        self.grid_left.Add(self.读取数据, 0)
+        self.读取数据.Bind(wx.EVT_BUTTON, self.check_readdata)
+        #空白
+        #self.label_ = wx.StaticText(self.panel_left)
+        #self.grid_left.Add(self.label_, 0)
+        # 选择框
+        self.cb1 = wx.CheckBox(panel, label = '力量') 
+        grid.Add(self.cb1,0)
+        self.cb2 = wx.CheckBox(panel, label = '敏捷') 
+        self.cb3 = wx.CheckBox(panel, label = '智力') 
+        grid.Add(self.cb2,0)
+        grid.Add(self.cb3,0)
+        self.Bind(wx.EVT_CHECKBOX,self.onChecked) 
+        #
+        self.radiobox=wx.RadioBox(panel,label='主属性',choices=['全部','近战','远程'])
+        self.grid_left.Add(self.radiobox, 0)
+        self.radiobox.Bind(wx.EVT_RADIOBOX,self.onRadioBox)
+        #单位列表
+        self.unitlabel = wx.StaticText(self.panel_left, label='选择单位')
+        self.grid_left.Add(self.unitlabel, 0)
+        self.unit_name_list_box = wx.ListBox(
+            self.panel_left, choices=self.unit_name_list, style=wx.LB_SINGLE)
+        self.grid_left.Add(self.unit_name_list_box, 90)
+        # 绑定数据
+        self.Bind(wx.EVT_LISTBOX, self.select_unit,
+                  self.unit_name_list_box)  # 绑定,点击左侧选择项时发生事件
+
+
+    def onRadioBox(self,event):
+        rb = event.GetEventObject() 
+        print (rb.GetLabel(),' is clicked from Radio Group' )
+    def onChecked(self, event): 
+            cb = event.GetEventObject() 
+            print (cb.GetLabel(),' is clicked',cb.GetValue())
     def creat_json(self, event):
         function_readfile.rf(公共变量.file)
 
@@ -353,7 +279,10 @@ class Mywin(wx.Frame):
         self.保存数据 = wx.Button(panel, label="保存数据")
         grid.Add(self.保存数据, pos=(公共变量.currentline+2, 5), flag=wx.ALIGN_CENTER)
         self.保存数据.Bind(wx.EVT_BUTTON, self.check_savedata)
-
+        #添加按钮 重生成json
+        self.重生成json = wx.Button(panel, label="重生成json")
+        grid.Add(self.重生成json,  pos=(公共变量.currentline+2, 1), flag=wx.ALIGN_CENTER)
+        self.重生成json.Bind(wx.EVT_BUTTON, self.check_readdata)
 
 def 启动窗口():
     app = wx.App()
