@@ -1,6 +1,3 @@
-import 公共变量
-import GUI函数
-import wx
 '''用于创建一个窗口界面,必须使用 GUI函数.py'''
 '''设计思路:
 1.整个窗口是1个对象,分为左侧窗口和右侧窗口
@@ -8,6 +5,13 @@ import wx
 3.右侧窗口所有控件作为1个对象
 4.控件分为2个对象,一类是label+text,另一类是label+choice
 '''
+import wx
+
+import function_readfile
+import GUI函数
+import 公共变量
+
+
 
 #全局变量######################
 # 公共变量.currentline=0      #向grid添加控件时当前所在的行号
@@ -47,7 +51,7 @@ class LineCtrls(object):
             value = 公共变量.translation[self.key_cn]
             # print('属性',self.key_cn,value)
         except KeyError:
-            print('错误,根据属性名(中文)获取属性名(英文),在翻译字典中未找到键值  self.key_cn =', self.key_cn)
+            print('单位无此属性,或翻译字典中未找到键值  self.key_cn =', self.key_cn)
             value = 公共变量.str_null
         except:
             print('其他错误')
@@ -175,7 +179,7 @@ class ctrls(object):
             #print('myitem = ',myitem)
         except:
             myitem = []
-            print('问题语句', 'myitem=公共变量.choiceitems_dict[class_str]')
+            #print('问题语句', 'myitem=公共变量.choiceitems_dict[',class_str,']')
 
         公共变量.currentline = 公共变量.currentline+1
         grid.Add(self.head, pos=(公共变量.currentline, colunm),flag=wx.ALIGN_CENTER)
@@ -192,7 +196,7 @@ class ctrls(object):
             if IsHasChoice:
                 grid.Add(i.Choice, pos=(x, colunm+2),flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
         公共变量.currentline = 公共变量.currentline + len(self.linectrlslist) + 1
-
+        print('创建了1组属性控件',class_str)
 
 class Mywin(wx.Frame):
     '''创建一个窗口类.\n
@@ -235,18 +239,27 @@ class Mywin(wx.Frame):
             常用的flag参数：wx.TOPwx.BOTTOMwx.LEFTwx.RIGHTwx.ALLwx.EXPAND
         border：调整控件的边框的宽度，此参数一般和flag参数配合使用。'''
         # 左侧窗口添加内容
-        self.读取数据 = wx.Button(self.panel_left, label="读取数据")
-        self.grid_left.Add(self.读取数据, 0)
-        self.label_ = wx.StaticText(
-            self.panel_left, label='', style=wx.ALIGN_CENTER)
+        #添加按钮 重生成json
+        self.重生成json = wx.Button(self.panel_left, label="重生成json")
+        self.grid_left.Add(self.重生成json, 0)
+        self.重生成json.Bind(wx.EVT_BUTTON, self.check_readdata)
+        #空白
+        self.label_ = wx.StaticText(self.panel_left)
         self.grid_left.Add(self.label_, 0)
+        #添加按钮 读取数据
+        self.读取数据 = wx.Button(self.panel_left, label="读取数据",style=wx.EXPAND)
+        self.grid_left.Add(self.读取数据, 0)
+        self.读取数据.Bind(wx.EVT_BUTTON, self.check_readdata)
+        #空白
+        self.label_ = wx.StaticText(self.panel_left)
+        self.grid_left.Add(self.label_, 0)
+        #单位列表
         self.unitlabel = wx.StaticText(self.panel_left, label='选择单位')
         self.grid_left.Add(self.unitlabel, 0)
         self.unit_name_list_box = wx.ListBox(
             self.panel_left, choices=self.unit_name_list, style=wx.LB_SINGLE)
         self.grid_left.Add(self.unit_name_list_box, 90)
         # 绑定数据
-        self.读取数据.Bind(wx.EVT_BUTTON, self.check_readdata)
         self.Bind(wx.EVT_LISTBOX, self.select_unit,
                   self.unit_name_list_box)  # 绑定,点击左侧选择项时发生事件
         ############################################################
@@ -262,6 +275,8 @@ class Mywin(wx.Frame):
         self.panel_right.SetSizerAndFit(self.grid_right)
         self.Center()
         self.Show()
+    def creat_json(self, event):
+        function_readfile.rf(公共变量.file)
 
     def select_unit(self, event):
         self.SelectUnit = event.GetEventObject().GetStringSelection()
@@ -329,14 +344,14 @@ class Mywin(wx.Frame):
             self.midctrls.append(ctrls(panel, grid, i, 2, False, width=75))
         #######################################################
         公共变量.currentline = 0
-        rightattribute = list(公共变量.attribute_dict.keys())[-4:]  # ['技能']
+        rightattribute = list(公共变量.attribute_dict.keys())[-3:]  # ['技能']
         self.rightctrls = []
         for i in rightattribute:
             self.rightctrls.append(ctrls(panel, grid, i, 4, width=120))
         ########################################################
         # 添加保存按钮
         self.保存数据 = wx.Button(panel, label="保存数据")
-        grid.Add(self.保存数据, pos=(公共变量.currentline, 2), flag=wx.ALIGN_CENTER)
+        grid.Add(self.保存数据, pos=(公共变量.currentline+2, 5), flag=wx.ALIGN_CENTER)
         self.保存数据.Bind(wx.EVT_BUTTON, self.check_savedata)
 
 
