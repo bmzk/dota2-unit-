@@ -26,7 +26,7 @@
 		"Ability8"		""
 		"Ability9"		""
 		"AbilityTalentStart"		"10"
-		"ArmorPhysical"		"256789"
+		"ArmorPhysical"		"-1"
 		"MagicalResistance"		"25"
 		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
 		"AttackDamageMin"		"1"
@@ -466,6 +466,13 @@
 				"0"		"1"
 			}
 		}
+		"MagicalResistance"		"无此键值"
+		"null"		"无此键值"
+		"StatusHealth"		"无此键值"
+		"StatusMana"		"无此键值"
+		"StatusManaRegen"		"无此键值"
+		"VisionDaytimeRange"		"无此键值"
+		"VisionNighttimeRange"		"无此键值"
 	"npc_dota_hero_bane"
 	{
 		"Model"		"models/heroes/bane/bane.vmdl"

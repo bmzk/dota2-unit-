@@ -16,8 +16,22 @@ def readData():
 
 
 def saveData(unitdict):
-    ''''''
-    f = open('20190429.txt', 'w')
+    ''' '''
+    def dicttostr(d:dict ,tab_n =1):
+        '''将1个字典转换为可直接写入文件的字符串.\n
+        d:输入的字典 ,
+        tab_n:前面的缩进数'''
+        s=lambda string:'"'+string+'"'
+        rv = '{'+'\n'
+        for i in d:
+            rv=rv+s(i)
+            if type(d[i])==dict:
+                rv=rv + '\n' + dicttostr(d[i])
+            else :
+                rv=rv+'		'+s(d[i])
+                
+        return rv 
+    f = open('20190517.txt', 'w')
     f.write('"DOTAHeroes" \n')
     f.write('{\n')
     f.write('	"Version"		"1"\n')
@@ -54,7 +68,6 @@ def saveData(unitdict):
     f.close()
     print('保存数据完成')
 
-
 def resetData(object):
     print('resetData')
     pass
@@ -78,7 +91,6 @@ def readToDb(sourceFile):
         print(i, "", asd)
     pass
 
-
 def cn_to_eng(cn: str):
     '''根据中文获取英文.\n'''
     rv = cn
@@ -93,7 +105,6 @@ def cn_to_eng(cn: str):
         except:
             print('cn_to_eng  其他错误')
     return rv
-
 
 def eng_to_cn(eng: str):
     '''根据英文获取中文.\n'''
