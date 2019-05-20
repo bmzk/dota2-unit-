@@ -1,66 +1,14 @@
 {
-    "DOTAHeroes"
-{
-        "Version": "1",
-        "npc_dota_hero_base"
-{
-            "BaseClass": "npc_dota_hero",
-            "BountyGoldMax": "0"
-        },
-        "npc_dota_hero_axe"
-{
-            "AttackRange": "150",
-            "AttributePrimary": "DOTA_ATTRIBUTE_STRENGTH",
-            "BoundsHullName": "DOTA_HULL_SIZE_HERO",
-            "ItemSlots"
-{
-                "1"
-{
-                    "SlotIndex": "1",
-                    "SlotName": "head",
-                    "SlotText": "#LoadoutSlot_Head_Accessory",
-                    "TextureWidth": "256",
-                    "TextureHeight": "256",
-                    "MaxPolygonsLOD0": "1000",
-                    "MaxPolygonsLOD1": "500"
-                },
-                "6"
-{
-                    "SlotIndex": "6",
-                    "SlotName": "summon",
-                    "SlotText": "#LoadoutSlot_Pet",
-                    "ShowItemOnGeneratedUnits": "1",
-                    "GeneratesUnits"
-{
-                        "0": "npc_dota_companion"
-                    }
-                }
-            },
-            "RenderablePortrait"
-{
-                "Particles"
-{
-                    "particles/units/heroes/hero_axe/axe_loadout.vpcf": "loadout"
-                }
-            },
-            "Bot"
-{
-                "SupportsEasyMode": "1",
-                "Loadout"
-{
-                    "item_stout_shield": "ITEM_CORE",
-                    "item_platemail": "ITEM_LUXURY",
-                    "item_mystic_staff": "ITEM_LUXURY",
-                    "item_recipe_shivas_guard": "ITEM_LUXURY",
-                    "item_shivas_guard": "ITEM_LUXURY | ITEM_DERIVED"
-                },
-                "Build"
-{
-                    "1": "axe_counter_helix",
-                    "2": "axe_berserkers_call",
-                    "3": "axe_counter_helix"
-                },
-                "HeroType": "DOTA_BOT_TANK | DOTA_BOT_STUN_SUPPORT"
+    "Version": "1",
+    "BaseClass": "npc_dota_hero",
+    "npc_dota_hero_axe": {
+        "AttackRange": "150",
+        "AttributePrimary": "DOTA_ATTRIBUTE_STRENGTH",
+        "BoundsHullName": "DOTA_HULL_SIZE_HERO",
+        "ItemSlots": {
+            "DOTA": {
+                "SlotName": "head",
+                "MaxPolygonsLOD1": "500"
             }
         }
     }
