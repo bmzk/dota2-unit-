@@ -39,34 +39,6 @@ def saveData(unitdict):
     f.write('"DOTAHeroes" \n')
     f.write('{\n')
     f.write('	"Version"		"1"\n')
-# """     for i in unitdict:
-#         f.write('	"'+i+'"\n')  # i 是英雄名
-#         f.write('	{\n')
-#         for j in unitdict[i]:  # j 是属性名
-#             if type(unitdict[i][j]) == dict:
-#                 f.write('		"'+j+'"\n')
-#                 f.write('		{\n')
-#                 for k in unitdict[i][j]:  # k是属性的属性名
-#                     if type(unitdict[i][j][k]) == dict:
-#                         f.write('			"'+k+'"\n')
-#                         f.write('			{\n')
-#                         for g in unitdict[i][j][k]:  # k是属性的属性的属性名
-#                             if type(unitdict[i][j][k][g]) == dict:
-#                                 f.write('				"'+g+'"\n')
-#                                 f.write('				{\n')
-#                                 for h in unitdict[i][j][k][g]:
-#                                     f.write('					"'+h+'"		"' +
-#                                             str(unitdict[i][j][k][g][h])+'"\n')
-#                                 f.write('					{\n')
-#                             else:
-#                                 f.write('				"'+h+'"		"' +
-#                                         str(unitdict[i][j][k][g])+'"\n')
-#                         f.write('			}\n')
-#                     else:
-#                         f.write('			"'+k+'"		"'+str(unitdict[i][j][k])+'"\n')
-#                 f.write('		}\n')
-#             else:
-#                 f.write('		"'+j+'"		"'+str(unitdict[i][j])+'"\n')
     f.write(dicttostr(unitdict))
     f.write('	}\n')
     f.write('}\n')
