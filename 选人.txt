@@ -1,0 +1,22 @@
+/all legion_commander
+/all nevermore
+
+
+
+/all Morphling
+/all Medusa
+/all pudge
+
+
+
+
+/ALL Treant
+Wisp
+Keeper_Of_The_Light
+Furion	先知
+Dark_Seer黑暗贤者
+Oracle神谕者
+/ALL storm_spirit
+
+
+Necrolyte
