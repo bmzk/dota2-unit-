@@ -16,44 +16,34 @@ def readData():
 
 
 def saveData(unitdict):
-    ''''''
-    f = open('20190429.txt', 'w')
+    ''' '''
+    def dicttostr(d:dict ,tab_n =0):
+        '''将1个字典转换为可直接写入文件的字符串.\n
+        d:输入的字典 ,
+        tab_n:前面的缩进数'''
+        cs='		' #键和值之间的连接符号
+        s=lambda string:'"'+string+'"'
+        gettabs= lambda n :'	' * n
+        rv =gettabs(tab_n) + '{'+'\n'
+        for i in d:
+            rv=rv + gettabs(tab_n+1) + s(i)
+            if type(d[i])==dict:
+                rv=rv + cs+ '\n' + dicttostr(d[i],tab_n+1)
+            else :
+                rv=rv+cs+s(d[i])
+            rv=rv+'\n'
+        rv=rv+gettabs(tab_n)+'}\n'
+        return rv 
+    ##########################################
+    f = open('20190517.txt', 'w')
     f.write('"DOTAHeroes" \n')
     f.write('{\n')
     f.write('	"Version"		"1"\n')
-    for i in unitdict:
-        f.write('	"'+i+'"\n')  # i 是英雄名
-        f.write('	{\n')
-        for j in unitdict[i]:  # j 是属性名
-            if type(unitdict[i][j]) == dict:
-                f.write('		"'+j+'"\n')
-                f.write('		{\n')
-                for k in unitdict[i][j]:  # k是属性的属性名
-                    if type(unitdict[i][j][k]) == dict:
-                        f.write('			"'+k+'"\n')
-                        f.write('			{\n')
-                        for g in unitdict[i][j][k]:  # k是属性的属性的属性名
-                            if type(unitdict[i][j][k][g]) == dict:
-                                f.write('				"'+g+'"\n')
-                                f.write('				{\n')
-                                for h in unitdict[i][j][k][g]:
-                                    f.write('					"'+h+'"		"' +
-                                            str(unitdict[i][j][k][g][h])+'"\n')
-                                f.write('					{\n')
-                            else:
-                                f.write('				"'+h+'"		"' +
-                                        str(unitdict[i][j][k][g])+'"\n')
-                        f.write('			}\n')
-                    else:
-                        f.write('			"'+k+'"		"'+str(unitdict[i][j][k])+'"\n')
-                f.write('		}\n')
-            else:
-                f.write('		"'+j+'"		"'+str(unitdict[i][j])+'"\n')
+    f.write(dicttostr(unitdict))
     f.write('	}\n')
     f.write('}\n')
     f.close()
     print('保存数据完成')
-
 
 def resetData(object):
     print('resetData')
@@ -78,7 +68,6 @@ def readToDb(sourceFile):
         print(i, "", asd)
     pass
 
-
 def cn_to_eng(cn: str):
     '''根据中文获取英文.\n'''
     rv = cn
@@ -93,7 +82,6 @@ def cn_to_eng(cn: str):
         except:
             print('cn_to_eng  其他错误')
     return rv
-
 
 def eng_to_cn(eng: str):
     '''根据英文获取中文.\n'''

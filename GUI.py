@@ -225,8 +225,8 @@ class Mywin(wx.Frame):
 
         for i in self.leftctrls:
             for j in i.linectrlslist:
-                self.unit_dict[self.SelectUnit][j.key_eng()
-                                                ] = j.TextCtrl.GetLabelText()
+                self.unit_dict[self.SelectUnit][j.key_eng()] 
+                = j.TextCtrl.GetLabelText()
         for i in self.midctrls:
             for j in i.linectrlslist:
                 self.unit_dict[self.SelectUnit][j.key_eng()
