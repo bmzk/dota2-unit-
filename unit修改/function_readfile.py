@@ -1,21 +1,20 @@
-'''读取文件,产生一个复制备份和一个json格式文件'''
+'''读取dota2的txt文件,产生一个复制备份和一个json格式文件。'''
+import os
 
-
-def rf(r_file):
+txtfile='C:\\Users\\bmzk1\\Documents\\GitHub\\dota2-unit-\\unit修改\\npc_units.txt'
+jsonfile='C:\\Users\\bmzk1\\Documents\\GitHub\\dota2-unit-\\unit修改\\npc_units.json'
+def rf(r_file=txtfile):
     '''读取文件,产生一个复制备份和一个json格式文件'''
     # 产生复制文件
-    import os
-    import time
-    t = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-    newfile = r_file[:-4]+t+'备份.txt'
-    os.system('copy '+r_file+' ' + newfile)
+    file_backup(r_file)
+    print ("当前工作目录 : %s" % os.getcwd())
     # 产生json文件
     f = open(r_file, 'r', encoding='utf-8')
     print('正在读取源文件', r_file)
     lines = f.readlines()
-    file_w = open('npc_heroes.json', 'w+', encoding='utf-8')
-    print('正在读取json文件,文件为', 'npc_heroes.json')
-    linelist = []
+    file_w = open(jsonfile , 'w+', encoding='utf-8')
+    print('正在读取json文件,文件为', jsonfile)
+    linelist = []#读取一行，以"为分隔符变为列表，存储在次列表中
     returnstring = '{'
     for i in lines:
         linelist = i.split('"')
@@ -42,3 +41,16 @@ def rf(r_file):
     file_w.close()
     print('生成json文件成功')
     return returnstring
+
+def file_backup(myfile):
+    '''产生一个备份文件,返回备份文件的文件名'''
+
+    #返回一个时间字符串，格式为YYYYMMDDHHmmSS，共14位'''
+    import time
+    t=time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+    newfile = myfile[:-4]+t+'备份.txt'
+    os.system('copy '+myfile+' ' + newfile)#复制文件
+    return newfile
+
+#rf()
+print('导入 function_readfile 模块 成功')
