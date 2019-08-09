@@ -1,0 +1,1 @@
+pyinstaller -F  C:\Users\bmzk1\Documents\GitHub\dota2-unit-\unitĞŞ¸Ä\main.py

@@ -16,7 +16,7 @@ def readData():
 
 
 def saveData(unitdict):
-    ''' '''
+    ''' 将unitdict 写为txt文件'''
     def dicttostr(d:dict ,tab_n =0):
         '''将1个字典转换为可直接写入文件的字符串.\n
         d:输入的字典 ,
